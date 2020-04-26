@@ -19,7 +19,7 @@ public class EachDayDao {
 	
 	public ArrayList<EachDay> getAllVietNamDays() throws SQLException, IOException {
 		ArrayList<EachDay> alldaysVn = new ArrayList<EachDay>();
-		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("/vietnamdays");
+		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("");
 		connnectToEachDay.setRequestMethod("GET");
 		connnectToEachDay.setRequestProperty("Accept", "application/json");
 		InputStream in = new BufferedInputStream(
@@ -43,10 +43,9 @@ public class EachDayDao {
 		return alldaysVn;
 	}
 
-	public void updateASpecificDay(String date, double cases, double recovered, double deaths) throws SQLException, IOException {
-		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("/updateadaysofvietNam?"
-				+ "date="+date
-				+"&cases="+cases
+	public void updateASpecificDay( double cases, double recovered, double deaths) throws SQLException, IOException {
+		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("?"
+				+"cases="+cases
 				+"&recovered"+recovered
 				+"&deaths="+deaths);
 		connnectToEachDay.setRequestMethod("POST");
@@ -57,11 +56,11 @@ public class EachDayDao {
 		}
 	}
 	public void insertAday(String date, double cases, double recovered, double deaths) throws SQLException, IOException {
-		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("/insertavnday?"+ "date="+date
+		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("?"
 				+"&cases="+cases
 				+"&recovered"+recovered
 				+"&deaths="+deaths);
-		connnectToEachDay.setRequestMethod("POST");
+		connnectToEachDay.setRequestMethod("PUT");
 		connnectToEachDay.setRequestProperty("Accept", "application/json");
 		if (connnectToEachDay.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "

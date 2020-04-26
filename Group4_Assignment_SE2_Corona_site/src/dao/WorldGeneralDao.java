@@ -15,12 +15,8 @@ import model.WorldGeneral;
 
 public class WorldGeneralDao {
 	
-	public WorldGeneralDao()  {
-		
-	}
-	
-	public void updateCurrentWorldGeneral() throws IOException  {
-		HttpURLConnection connectToUpdateWorlGeneral = DbConnect.getConnectionWorldGeneral("/autoupdate");
+	public void autoUpdateCurrentWorldGeneral() throws IOException  {
+		HttpURLConnection connectToUpdateWorlGeneral = DbConnect.getConnectionWorldGeneral("/autoupdateworldgeneral");
 		connectToUpdateWorlGeneral.setRequestMethod("POST");
 		connectToUpdateWorlGeneral.setRequestProperty("Accept", "application/json");
 		if (connectToUpdateWorlGeneral.getResponseCode() != 200) {
@@ -59,7 +55,7 @@ public class WorldGeneralDao {
 	}
 	public WorldGeneral getCurrentWorldGeneral() throws IOException {
 		WorldGeneral wG = new WorldGeneral(0,"",0,0,0,0,0,0);
-		HttpURLConnection connectToUpdateWorlGeneral = DbConnect.getConnectionWorldGeneral("/worldgeneral");
+		HttpURLConnection connectToUpdateWorlGeneral = DbConnect.getConnectionWorldGeneral("");
 		connectToUpdateWorlGeneral.setRequestMethod("GET");
 		connectToUpdateWorlGeneral.setRequestProperty("Accept", "application/json");
 		InputStream in = new BufferedInputStream(
@@ -85,7 +81,7 @@ public class WorldGeneralDao {
 	public void updateWorldGeneralManually(String date,int newConfirmed, int totalConfirmed, int newDeaths, int totalDeaths, int newRecovered,
 			int totalRecovered) throws IOException  
 	{
-		HttpURLConnection connectToWorldGeneral = DbConnect.getConnectionCountry("/updateworldmanually?"
+		HttpURLConnection connectToWorldGeneral = DbConnect.getConnectionWorldGeneral("?"
 				+ "date="+date
 				+"&newconfirmed="+newConfirmed
 				+"&totalconfirmed="+totalConfirmed
@@ -94,6 +90,22 @@ public class WorldGeneralDao {
 				+"&newrecovered="+newRecovered
 				+"&totalrecovered="+totalRecovered);
 		connectToWorldGeneral.setRequestMethod("POST");
+		connectToWorldGeneral.setRequestProperty("Accept", "application/json");
+		if (connectToWorldGeneral.getResponseCode() != 200) {
+		    throw new RuntimeException("Failed : HTTP error code : "
+		            + connectToWorldGeneral.getResponseCode());
+		}
+	}
+	public void insertWorldGeneralManually(int newConfirmed, int totalConfirmed, int newDeaths, int totalDeaths, int newRecovered,
+			int totalRecovered) throws IOException {
+		HttpURLConnection connectToWorldGeneral = DbConnect.getConnectionWorldGeneral("?"
+				+"newconfirmed="+newConfirmed
+				+"&totalconfirmed="+totalConfirmed
+				+"&newdeaths="+newDeaths
+				+"&totaldeaths="+totalDeaths
+				+"&newrecovered="+newRecovered
+				+"&totalrecovered="+totalRecovered);
+		connectToWorldGeneral.setRequestMethod("PUT");
 		connectToWorldGeneral.setRequestProperty("Accept", "application/json");
 		if (connectToWorldGeneral.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "

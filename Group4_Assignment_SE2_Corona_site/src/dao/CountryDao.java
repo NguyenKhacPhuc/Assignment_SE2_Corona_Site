@@ -31,7 +31,7 @@ public class CountryDao {
 		}
 	}
 	public ArrayList<Country> selectAllCountry() throws IOException{
-		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("/displayall");
+		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("");
 		ArrayList<Country> cLst = new ArrayList<Country>();
 		connectToCountry.setRequestMethod("GET");
 		connectToCountry.setRequestProperty("Accept", "application/json");
@@ -108,29 +108,11 @@ public class CountryDao {
 		Country c = new Country(country, newConfirmed, totalConfirmed, newDeaths, totalDeaths, newRecovered, totalRecovered, date, countryCode);
 		return c;
 	}
-	public void createCountry(String country, double newConfirmed, double totalConfirmed, double newDeaths, double totalDeaths,
-			double newRecovered, double totalRecovered, String date,String countryCode) throws SQLException, IOException {
-		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("/createcountry?"
-				+ "country="+country
-				+"&newconfirmed="+newConfirmed
-				+"&totalconfirmed="+totalConfirmed
-				+"&newdeaths="+newDeaths
-				+"&totaldeaths="+totalDeaths
-				+"&newrecovered="+newRecovered
-				+"&totalrecovered="+totalRecovered
-				+"&date="+date
-				+"countrycode="+countryCode);
-		connectToCountry.setRequestMethod("POST");
-		connectToCountry.setRequestProperty("Accept", "application/json");
-		if (connectToCountry.getResponseCode() != 200) {
-		    throw new RuntimeException("Failed : HTTP error code : "
-		            + connectToCountry.getResponseCode());
-		}
-	}
+
 	
 	public void deleteCountry(String cD) throws SQLException, IOException {
-		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("/deletecountry?countrycode="+cD);
-		connectToCountry.setRequestMethod("POST");
+		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("?countrycode="+cD);
+		connectToCountry.setRequestMethod("DELETE");
 		connectToCountry.setRequestProperty("Accept", "application/json");
 		if (connectToCountry.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "
@@ -139,7 +121,7 @@ public class CountryDao {
 	}
 	public void updateSpecificCountry(String country, double newConfirmed, double totalConfirmed, double newDeaths, double totalDeaths,
 			double newRecovered, double totalRecovered, String date,String countryCode) throws SQLException, IOException {
-		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("/updateacountry?"
+		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("?"
 				+ "country="+country
 				+"&newconfirmed="+newConfirmed
 				+"&totalconfirmed="+totalConfirmed
@@ -156,19 +138,10 @@ public class CountryDao {
 		            + connectToCountry.getResponseCode());
 		}
 	}
-	// only use when country in the table is empty
-	public void insertAllCountry() throws IOException, SQLException {
-		HttpURLConnection connectToCountry = DbConnect.getConnectionCountry("/automaticinsertallcountry");
-		connectToCountry.setRequestMethod("POST");
-		connectToCountry.setRequestProperty("Accept", "application/json");
-		if (connectToCountry.getResponseCode() != 200) {
-		    throw new RuntimeException("Failed : HTTP error code : "
-		            + connectToCountry.getResponseCode());
-		}
-}
+
 	public void insertACountry(String country, double newConfirmed, double totalConfirmed, double newDeaths, double totalDeaths,
 			double newRecovered, double totalRecovered, String date,String countryCode) throws SQLException, IOException {
-		HttpURLConnection insertACountry = DbConnect.getConnectionCountry("/createcountry?"
+		HttpURLConnection insertACountry = DbConnect.getConnectionCountry("?"
 				+ "country="+country
 				+"&newconfirmed="+newConfirmed
 				+"&totalconfirmed="+totalConfirmed
@@ -178,7 +151,7 @@ public class CountryDao {
 				+"&totalrecovered="+totalRecovered
 				+"&date="+date
 				+"countrycode="+countryCode);
-		insertACountry.setRequestMethod("POST");
+		insertACountry.setRequestMethod("PUT");
 		insertACountry.setRequestProperty("Accept", "application/json");
 		if (insertACountry.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "

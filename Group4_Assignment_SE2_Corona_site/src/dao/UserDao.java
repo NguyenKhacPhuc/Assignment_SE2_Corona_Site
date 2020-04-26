@@ -17,41 +17,41 @@ import model.User;
 
 public class UserDao {
 	
-	public ArrayList<User> getAllUser() throws SQLException, IOException{
-		HttpURLConnection connectToUser = DbConnect.getConnectionUser("/displayalluser");
-		ArrayList<User> userList = new ArrayList<User>();
-		connectToUser.setRequestMethod("GET");
-		connectToUser.setRequestProperty("Accept", "application/json");
-		InputStream in = new BufferedInputStream(
-			    (connectToUser.getInputStream()));
-		if (connectToUser.getResponseCode() != 200) {
-		    throw new RuntimeException("Failed : HTTP error code : "
-		            + connectToUser.getResponseCode());
-		}
-		String output = convertToString(in);
-		JSONArray allUser = new JSONArray(output);
-		for(int i =0;i<allUser.length();i++) {
-			JSONObject userO = allUser.getJSONObject(i);
-			int iD = userO.getInt("iD");
-			String name = userO.getString("username");
-			String password = userO.getString("password");
-			String email = userO.getString("email");
-			int age = userO.getInt("age");
-			String dob = userO.getString("dob");
-			User user = new User(name,password,email,age,dob);
-			user.setiD(iD);
-			userList.add(user);
-		}
-		return userList;
-	}
+//	public ArrayList<User> getAllUser() throws SQLException, IOException{
+//		HttpURLConnection connectToUser = DbConnect.getConnectionUser("");
+//		ArrayList<User> userList = new ArrayList<User>();
+//		connectToUser.setRequestMethod("GET");
+//		connectToUser.setRequestProperty("Accept", "application/json");
+//		InputStream in = new BufferedInputStream(
+//			    (connectToUser.getInputStream()));
+//		if (connectToUser.getResponseCode() != 200) {
+//		    throw new RuntimeException("Failed : HTTP error code : "
+//		            + connectToUser.getResponseCode());
+//		}
+//		String output = convertToString(in);
+//		JSONArray allUser = new JSONArray(output);
+//		for(int i =0;i<allUser.length();i++) {
+//			JSONObject userO = allUser.getJSONObject(i);
+//			int iD = userO.getInt("iD");
+//			String name = userO.getString("username");
+//			String password = userO.getString("password");
+//			String email = userO.getString("email");
+//			int age = userO.getInt("age");
+//			String dob = userO.getString("dob");
+//			User user = new User(name,password,email,age,dob);
+//			user.setiD(iD);
+//			userList.add(user);
+//		}
+//		return userList;
+//	}
 	public void createUser(String username, String password, String email, int age, String dob) throws SQLException, IOException {
-		HttpURLConnection connectToUser = DbConnect.getConnectionUser("/createuser?"
+		HttpURLConnection connectToUser = DbConnect.getConnectionUser("?"
 				+ "username="+username
 				+ "&password="+password
 				+ "&email="+email
 				+ "&age="+age
 				+ "&dob="+dob);
-		connectToUser.setRequestMethod("POST");
+		connectToUser.setRequestMethod("PUT");
 		connectToUser.setRequestProperty("Accept", "application/json");
 		if (connectToUser.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "
@@ -59,8 +59,8 @@ public class UserDao {
 		}
 	}
 	public void deleteUser(int id) throws SQLException, IOException {
-		HttpURLConnection connectToUser = DbConnect.getConnectionUser("/deleteuser?ID="+id);
-		connectToUser.setRequestMethod("POST");
+		HttpURLConnection connectToUser = DbConnect.getConnectionUser("?ID="+id);
+		connectToUser.setRequestMethod("DELETE");
 		connectToUser.setRequestProperty("Accept", "application/json");
 		if (connectToUser.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "
@@ -68,7 +68,7 @@ public class UserDao {
 		}
 	}
 	public ArrayList<User> searchUser(String name) throws SQLException, IOException {
-		HttpURLConnection connectToUser = DbConnect.getConnectionUser("/searchuser?username="+name);
+		HttpURLConnection connectToUser = DbConnect.getConnectionUser("?username="+name);
 		ArrayList<User> userList = new ArrayList<User>();
 		connectToUser.setRequestMethod("GET");
 		connectToUser.setRequestProperty("Accept", "application/json");
@@ -95,7 +95,7 @@ public class UserDao {
 		return userList;
 	}
 	public void updateUser(int iD,String username, String password, String email, int age, String dob) throws SQLException, IOException {
-		HttpURLConnection connectToUser = DbConnect.getConnectionUser("/updateuser?"
+		HttpURLConnection connectToUser = DbConnect.getConnectionUser("?"
 				+ "iD="+iD
 				+"&username="+username
 				+"&password="+password

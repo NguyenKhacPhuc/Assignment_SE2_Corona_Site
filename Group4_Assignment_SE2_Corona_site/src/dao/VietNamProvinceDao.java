@@ -18,19 +18,10 @@ import model.VietNamProvinces;
 public class VietNamProvinceDao {
 	
 	
-	public void insertProvincesStatistic(String name, double confirmed, double underTreatment, double recovered, double deaths) throws IOException{
-		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/insertAllProvinces");
-		connectToPtovince.setRequestMethod("POST");
-		connectToPtovince.setRequestProperty("Accept", "application/json");
-		if (connectToPtovince.getResponseCode() != 200) {
-		    throw new RuntimeException("Failed : HTTP error code : "
-		            + connectToPtovince.getResponseCode());
-		}
-	}
 	public ArrayList<VietNamProvinces> selectAllProvinces() throws IOException {
 		ArrayList<VietNamProvinces> allVNProvinces = new ArrayList<VietNamProvinces>();
-		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/displayall");
-		connectToPtovince.setRequestMethod("POST");
+		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("");
+		connectToPtovince.setRequestMethod("GET");
 		connectToPtovince.setRequestProperty("Accept", "application/json");
 		InputStream in = new BufferedInputStream(
 			    (connectToPtovince.getInputStream()));
@@ -58,13 +49,13 @@ public class VietNamProvinceDao {
 		connectToPtovince.setRequestProperty("Accept", "application/json");
 }
 	public void insertAProvince(String name, double confirmed, double underTreatment, double recovered, double deaths) throws  IOException {
-		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/insertavietnamprovince?"
+		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("?"
 				+ "name="+name
 				+"&confirmed="+confirmed
 				+"&undertreatment="+underTreatment
 				+"&recovered="+recovered
 				+"&deaths="+deaths);
-		connectToPtovince.setRequestMethod("POST");
+		connectToPtovince.setRequestMethod("PUT");
 		connectToPtovince.setRequestProperty("Accept", "application/json");
 		if (connectToPtovince.getResponseCode() != 200) {
 		    throw new RuntimeException("Failed : HTTP error code : "
@@ -72,7 +63,7 @@ public class VietNamProvinceDao {
 		}
 	}
 	public void updateAProvince(String name, double confirmed, double underTreatment, double recovered, double deaths) throws  IOException {
-		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/updateaprovince?"
+		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("?"
 				+ "name="+name
 				+"&confirmed="+confirmed
 				+"&undertreatment="+underTreatment
@@ -86,8 +77,8 @@ public class VietNamProvinceDao {
 		}
 	}
 	public void deleteAprovince(String name) throws SQLException, IOException {
-		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/deleteaprovince?name="+name);
-		connectToPtovince.setRequestMethod("POST");
+		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("?name="+name);
+		connectToPtovince.setRequestMethod("DELETE");
 		connectToPtovince.setRequestProperty("Accept", "application/json");
 	}
 	private static String convertToString(InputStream in) {
