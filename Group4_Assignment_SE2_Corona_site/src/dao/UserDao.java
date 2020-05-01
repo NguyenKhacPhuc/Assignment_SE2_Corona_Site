@@ -109,6 +109,28 @@ public class UserDao {
 		            + connectToUser.getResponseCode());
 		}
 	}
+	public User getUserByID(int ID) throws IOException {
+		HttpURLConnection connectToUser = DbConnect.getConnectionUser("/searchuserbyid?ID="+ID);
+		connectToUser.setRequestMethod("GET");
+		connectToUser.setRequestProperty("Accept", "application/json");
+		InputStream in = new BufferedInputStream(
+			    (connectToUser.getInputStream()));
+		
+		if (connectToUser.getResponseCode() != 200) {
+		    throw new RuntimeException("Failed : HTTP error code : "
+		            + connectToUser.getResponseCode());
+		}
+		String result = convertToString(in);
+		JSONObject rs = new  JSONObject(result);
+		String name1 = rs.getString("username");
+		String password = rs.getString("password");
+		String email = rs.getString("email");
+		int age = rs.getInt("age");
+		String dob = rs.getString("dob");
+		 
+		User u = new User(name1,password,email,age,dob);
+		return u;
+	}
 	private static String convertToString(InputStream in) {
 		// TODO Auto-generated method stub
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
