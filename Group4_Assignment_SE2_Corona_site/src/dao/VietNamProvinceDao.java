@@ -18,6 +18,7 @@ import model.VietNamProvinces;
 public class VietNamProvinceDao {
 	
 	
+	
 	public ArrayList<VietNamProvinces> selectAllProvinces() throws IOException {
 		ArrayList<VietNamProvinces> allVNProvinces = new ArrayList<VietNamProvinces>();
 		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("");
@@ -42,6 +43,25 @@ public class VietNamProvinceDao {
 			allVNProvinces.add(new VietNamProvinces(name, confirmed, underTreatment, recovered, deaths, date));
 		}
 		return allVNProvinces;
+	}
+	public VietNamProvinces selectVietNamProvince(String name) throws IOException {
+		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/selectaprovince?province="+name);
+		connectToPtovince.setRequestMethod("GET");
+		connectToPtovince.setRequestProperty("Accept", "application/json");
+		InputStream in = new BufferedInputStream(
+			    (connectToPtovince.getInputStream()));
+		if (connectToPtovince.getResponseCode() != 200) {
+		    throw new RuntimeException("Failed : HTTP error code : "
+		            + connectToPtovince.getResponseCode());
+		}
+		String output = convertToString(in);
+		JSONObject province = new JSONObject(output);
+		double confirmed = province.getDouble("confirmed");
+		double underTreatment = province.getDouble("underTreatment");
+		double recovered = province.getDouble("recovered");
+		double deaths = province.getDouble("deaths");
+		String date  = province.getString("date");
+		return new VietNamProvinces(name, confirmed, underTreatment, recovered, deaths, date);
 	}
 	public void automaticUpdateProvinces() throws IOException, SQLException {
 		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/autoupdate");

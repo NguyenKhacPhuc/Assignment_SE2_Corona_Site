@@ -42,10 +42,33 @@ public class EachDayDao {
 			
 		return alldaysVn;
 	}
-
-	public void updateASpecificDay( double cases, double recovered, double deaths) throws SQLException, IOException {
+	public EachDay selectOneDay(int month,int date,int year) throws IOException {
+		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("/selectaday?"
+				+ "month="+month
+				+"&date="+date
+				+"&year="+year);
+		connnectToEachDay.setRequestMethod("GET");
+		connnectToEachDay.setRequestProperty("Accept", "application/json");
+		InputStream in = new BufferedInputStream(
+			    (connnectToEachDay.getInputStream()));
+		if (connnectToEachDay.getResponseCode() != 200) {
+		    throw new RuntimeException("Failed : HTTP error code : "
+		            + connnectToEachDay.getResponseCode());
+		}
+		String output = convertToString(in);
+		JSONObject dayChosen = new JSONObject(output);
+		String dateG = dayChosen.getString("date");
+		double cases = dayChosen.getDouble("cases");
+		double recovered = dayChosen.getDouble("recovered");
+		double deaths = dayChosen.getDouble("deaths");
+		EachDay eD = new EachDay(dateG, cases, recovered, deaths);
+		return eD;
+		
+	}
+	public void updateASpecificDay(String date, double cases, double recovered, double deaths) throws SQLException, IOException {
 		HttpURLConnection connnectToEachDay = DbConnect.getConnectionEachday("?"
-				+"cases="+cases
+				+ "date="+date
+				+"&cases="+cases
 				+"&recovered"+recovered
 				+"&deaths="+deaths);
 		connnectToEachDay.setRequestMethod("POST");
