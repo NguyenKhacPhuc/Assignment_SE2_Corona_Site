@@ -11,6 +11,20 @@ public class VietNamProvinces {
 		this.deaths = deaths;
 		this.date = date;
 	}
+	public VietNamProvinces(int iD,String name, double confirmed, double underTreatment, double recovered, double deaths,String date) {
+		super();
+		this.iD=iD;
+		this.name = name;
+		this.confirmed = confirmed;
+		this.underTreatment = underTreatment;
+		this.recovered = recovered;
+		this.deaths = deaths;
+		this.date = date;
+	}
+	public VietNamProvinces() {
+		
+	}
+	private int iD;
 	private String name;
 	private double confirmed;
 	private double underTreatment;
@@ -54,6 +68,12 @@ public class VietNamProvinces {
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+	public int getiD() {
+		return iD;
+	}
+	public void setiD(int iD) {
+		this.iD = iD;
 	}
 	
 }

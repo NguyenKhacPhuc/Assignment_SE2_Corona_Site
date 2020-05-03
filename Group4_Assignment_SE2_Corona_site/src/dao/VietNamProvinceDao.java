@@ -34,18 +34,19 @@ public class VietNamProvinceDao {
 		JSONArray allProvinces = new JSONArray(output);
 		for(int i = 0; i < allProvinces.length();i++) {
 			JSONObject province = allProvinces.getJSONObject(i);
+			int ID = province.getInt("iD");
 			String name = province.getString("name");
 			double confirmed = province.getDouble("confirmed");
 			double underTreatment = province.getDouble("underTreatment");
 			double recovered = province.getDouble("recovered");
 			double deaths = province.getDouble("deaths");
 			String date  = province.getString("date");
-			allVNProvinces.add(new VietNamProvinces(name, confirmed, underTreatment, recovered, deaths, date));
+			allVNProvinces.add(new VietNamProvinces(ID,name, confirmed, underTreatment, recovered, deaths, date));
 		}
 		return allVNProvinces;
 	}
-	public VietNamProvinces selectVietNamProvince(String name) throws IOException {
-		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/selectaprovince?province="+name);
+	public VietNamProvinces selectVietNamProvince(int ID ) throws IOException {
+		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/selectaprovince?ID="+ID);
 		connectToPtovince.setRequestMethod("GET");
 		connectToPtovince.setRequestProperty("Accept", "application/json");
 		InputStream in = new BufferedInputStream(
@@ -56,12 +57,14 @@ public class VietNamProvinceDao {
 		}
 		String output = convertToString(in);
 		JSONObject province = new JSONObject(output);
+		int iD = province.getInt("iD");
+		String name = province.getString("name");
 		double confirmed = province.getDouble("confirmed");
 		double underTreatment = province.getDouble("underTreatment");
 		double recovered = province.getDouble("recovered");
 		double deaths = province.getDouble("deaths");
 		String date  = province.getString("date");
-		return new VietNamProvinces(name, confirmed, underTreatment, recovered, deaths, date);
+		return new VietNamProvinces(iD,name, confirmed, underTreatment, recovered, deaths, date);
 	}
 	public void automaticUpdateProvinces() throws IOException, SQLException {
 		HttpURLConnection connectToPtovince = DbConnect.getConnectionProvince("/autoupdate");
